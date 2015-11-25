@@ -1,52 +1,47 @@
-// Visualisation de la webcam
-//V0 23/11/2015
+//création webcam
+//v1
+//25/11/15
 
 
 #include <stdio.h>
 #include "opencv/highgui.h"
 #include "opencv/cv.h"
 
+
+using namespace std;
+using namespace cv;
+
 int main() {
 
     // Touche clavier
     char key;
-    // Image
-     IplImage *image;
     // Capture vidéo
-    CvCapture *capture;
+    VideoCapture cam(1);
+    //test si la cam est ouverte
+    if (!cam.isOpened())
+        cout<<"Cam non ouverte !";
 
-    // Ouvrir le flux vidéo
-    //capture = cvCreateFileCapture("/path/to/your/video/test.avi"); // chemin pour un fichier
-    capture = cvCreateCameraCapture(CV_CAP_ANY);
-
-    // Vérifier si l'ouverture du flux est ok
-    if (!capture) {
-
-       printf("Ouverture du flux vidéo impossible !\n");
-       return 1;
-
-    }
-
-    // Définition de la fenêtre
-    cvNamedWindow("Webcam test", CV_WINDOW_AUTOSIZE);
+    namedWindow("cam");
+    // Image
+    Mat image;
 
     // Boucle tant que l'utilisateur n'appuie pas sur la touche q (ou Q)
     while(key != 'q' && key != 'Q') {
 
-       // On récupère une image
-       image = cvQueryFrame(capture);
-
-       // On affiche l'image dans une fenêtre
-       cvShowImage( "Webcam test", image);
-
-       // On attend 10ms
-       key = cvWaitKey(10);
+        //on lit une image
+        cam.read(image);
+        //on test si l'image est vide
+        if (image.empty())
+            cout<<"image vide !!"<<endl;
+        //affiche l'image
+        imshow("cam",image);
+        //attend 10ms
+        key = cvWaitKey(10);
 
     }
 
-    cvReleaseCapture(&capture);
-    cvDestroyWindow("Webcam test");
-
+    destroyAllWindows();
+    cam.release();//détruit le videocapture. Il faut absolumet quitter le programme avec q ou Q sinon en relançant le programme on va avoir un bug
     return 0;
 
 }

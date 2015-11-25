@@ -22,12 +22,12 @@ int main() {
         cout<<"Cam non ouverte !";
 
     namedWindow("cam");
+    // Image
+    Mat image;
 
     // Boucle tant que l'utilisateur n'appuie pas sur la touche q (ou Q)
     while(key != 'q' && key != 'Q') {
 
-        // Image
-        Mat image;
         //on lit une image
         cam.read(image);
         //on test si l'image est vide

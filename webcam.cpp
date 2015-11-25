@@ -1,5 +1,5 @@
 //création webcam
-//v1
+//v1.1
 //25/11/15
 
 
@@ -20,6 +20,8 @@ int main() {
     //test si la cam est ouverte
     if (!cam.isOpened())
         cout<<"Cam non ouverte !";
+    //permet de savoir si on est en pause ou non
+    int pause=0;
 
     namedWindow("cam");
     // Image
@@ -28,11 +30,16 @@ int main() {
     // Boucle tant que l'utilisateur n'appuie pas sur la touche q (ou Q)
     while(key != 'q' && key != 'Q') {
 
-        //on lit une image
-        cam.read(image);
-        //on test si l'image est vide
-        if (image.empty())
-            cout<<"image vide !!"<<endl;
+        if(key=='p')
+            pause=(pause+1)%2;
+        if (pause==0)//si on n'est pas en pause, on recupere une nouvelle image
+        {
+            //on lit une image
+            cam.read(image);
+            //on test si l'image est vide
+            if (image.empty())
+                cout<<"image vide !!"<<endl;
+        }
         //affiche l'image
         imshow("cam",image);
         //attend 10ms

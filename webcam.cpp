@@ -1,52 +1,53 @@
-// Visualisation de la webcam
-//V0 23/11/2015
-
-
 #include <stdio.h>
 #include "opencv/highgui.h"
 #include "opencv/cv.h"
+
+#include "traitement.h"
+
+using namespace std;
+using namespace cv;
 
 int main() {
 
     // Touche clavier
     char key;
-    // Image
-     IplImage *image;
     // Capture vidéo
-    CvCapture *capture;
+    VideoCapture cam(1);
+    //test si la cam est ouverte
+    if (!cam.isOpened())
+        cout<<"Cam non ouverte !";
+    //permet de savoir si on est en pause ou non
+    int pause=0;
+    //creation de la fenetre
+    namedWindow("cam");
+    // Image
+    Mat image1,image2;
+    //descripteurs
+    Mat descripteur1,descripteur2;
 
-    // Ouvrir le flux vidéo
-    //capture = cvCreateFileCapture("/path/to/your/video/test.avi"); // chemin pour un fichier
-    capture = cvCreateCameraCapture(CV_CAP_ANY);
-
-    // Vérifier si l'ouverture du flux est ok
-    if (!capture) {
-
-       printf("Ouverture du flux vidéo impossible !\n");
-       return 1;
-
-    }
-
-    // Définition de la fenêtre
-    cvNamedWindow("Webcam test", CV_WINDOW_AUTOSIZE);
-
+    cam.read(image2);
+    descripteur2=detectionFeature(image2);
     // Boucle tant que l'utilisateur n'appuie pas sur la touche q (ou Q)
     while(key != 'q' && key != 'Q') {
 
-       // On récupère une image
-       image = cvQueryFrame(capture);
+        if(key=='p')
+            pause=(pause+1)%2;
+        if (pause==0)
+        {
+            //on lit une image
+            cam.read(image1);
+            //on test si l'image est vide
+            if (image1.empty())
+                cout<<"image vide !!"<<endl;
+        }
 
-       // On affiche l'image dans une fenêtre
-       cvShowImage( "Webcam test", image);
-
-       // On attend 10ms
-       key = cvWaitKey(10);
+        //attend 10ms
+        key = cvWaitKey(10);
 
     }
 
-    cvReleaseCapture(&capture);
-    cvDestroyWindow("Webcam test");
-
+    destroyAllWindows();
+    cam.release();//détruit le videocapture. Il faut absolumet quitter le programme avec q ou Q sinon en relançant le programme on va avoir un bug
     return 0;
 
 }

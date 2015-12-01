@@ -21,11 +21,13 @@ int main(){
     // Image
     Mat image1,image2;
     int pause=0;
-    //descripteurs
-    Mat descripteur1,descripteur2;
+    //matrice
+    Mat matrice;
     //bons matches
     std::vector<DMatch> bonMatches;
     std::vector<KeyPoint> keypoints_2,keypoints_1;
+    //descriptor
+    Mat descripteur1,descripteur2;
 
     while(key != 'q' && key != 'Q') {
 
@@ -57,11 +59,9 @@ int main(){
         keypoints_2=getPointCle(image2);
         descripteur1=detectionFeature(image1);
         descripteur2=detectionFeature(image2);
-        bonMatches=matcher (descripteur1,descripteur2);
-
-        Mat img_matches;
-        drawMatches( image1, keypoints_1, image2, keypoints_2,bonMatches, img_matches, Scalar::all(-1), Scalar::all(-1), vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
-        imshow("Good Matches",img_matches);
+        bonMatches=matcher(descripteur1,descripteur2);
+        matrice=matriceFondamentale(keypoints_1,keypoints_2,bonMatches);
+        cout<<matrice<<endl;
     }
 
         //attend 10ms

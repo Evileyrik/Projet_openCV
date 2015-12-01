@@ -5,11 +5,12 @@
 #include <opencv2/opencv.hpp>
 
 using namespace cv;
+using namespace std;
 
 
 Mat detectionFeature (Mat image){
 
-    int nbPoints = 400;//détermine le nombre de points d'interets
+    int nbPoints = 1000;//détermine le nombre de points d'interets
 
     //detection des points cle
     OrbFeatureDetector detecteur( nbPoints );
@@ -26,7 +27,7 @@ Mat detectionFeature (Mat image){
 }
 std::vector<KeyPoint> getPointCle (Mat image){
 
-    int nbPoints = 400;//détermine le nombre de points d'interets
+    int nbPoints = 1000;//détermine le nombre de points d'interets
 
     //detection des points cle
     OrbFeatureDetector detecteur( nbPoints );
@@ -69,12 +70,37 @@ std::vector<KeyPoint> getPointCle (Mat image){
     std::vector<DMatch> bonMatches;
     for (int i=0;i<matches.size();i++)
     {
-        if (matches[i].distance<=2.5*dmin)
+        if (matches[i].distance<=3*dmin)
             bonMatches.push_back(matches[i]);
     }
 
     return bonMatches;
 
 }
+
+Mat matriceFondamentale (vector<KeyPoint> pointcle1,vector<KeyPoint> pointcle2,vector<DMatch> bonMatches){
+
+    vector<Point2f> points1,points2;
+
+    /*for(int i = 0; i<bonMatches.size(); i++ )
+    {
+        // image de gauche
+        points1.push_back(pointcle1[bonMatches[i].queryIdx].pt);
+        // image de droite
+        points2.push_back(pointcle2[bonMatches[i].trainIdx].pt);
+    }*/
+
+    int m = max(pointcle1.size(),pointcle2.size());
+
+    for (int i=0;i<m;i++){
+        points1.push_back(pointcle1[i].pt);
+    }
+    for (int i=0;i<m;i++){
+        points2.push_back(pointcle2[i].pt);
+    }
+    Mat matrice = findFundamentalMat(points1,points2,FM_RANSAC, 3, 0.99);//pb de compilation ici!
+
+}
+
 
 

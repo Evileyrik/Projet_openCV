@@ -9,5 +9,7 @@ Mat detectionFeature (Mat);
 
  std::vector< DMatch > matcher (Mat,Mat);
 
- std::vector<KeyPoint> getPointCle (Mat image);
+ std::vector<KeyPoint> getPointCle (Mat );
+
+ Mat matriceFondamentale (vector<KeyPoint> ,vector<KeyPoint> ,vector<DMatch>);
 

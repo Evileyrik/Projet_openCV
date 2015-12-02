@@ -82,24 +82,24 @@ Mat matriceFondamentale (vector<KeyPoint> pointcle1,vector<KeyPoint> pointcle2,v
 
     vector<Point2f> points1,points2;
 
-    /*for(int i = 0; i<bonMatches.size(); i++ )
+    for(int i = 0; i<bonMatches.size(); i++ )
     {
         // image de gauche
         points1.push_back(pointcle1[bonMatches[i].queryIdx].pt);
         // image de droite
         points2.push_back(pointcle2[bonMatches[i].trainIdx].pt);
-    }*/
+    }
 
-    int m = max(pointcle1.size(),pointcle2.size());
+   /* int m = max(pointcle1.size(),pointcle2.size());
 
     for (int i=0;i<m;i++){
         points1.push_back(pointcle1[i].pt);
     }
     for (int i=0;i<m;i++){
         points2.push_back(pointcle2[i].pt);
-    }
-    Mat matrice = findFundamentalMat(points1,points2,FM_RANSAC, 3, 0.99);//pb de compilation ici!
-
+    }*/
+    Mat matrice = findFundamentalMat(points1,points2,FM_RANSAC, 3, 0.99);
+    return matrice;
 }
 
 

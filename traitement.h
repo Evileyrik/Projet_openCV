@@ -7,9 +7,11 @@ using namespace cv;
 
 Mat detectionFeature (Mat);
 
- std::vector< DMatch > matcher (Mat,Mat);
+std::vector< DMatch > matcher (Mat,Mat);
 
- std::vector<KeyPoint> getPointCle (Mat );
+std::vector<KeyPoint> getPointCle (Mat );
 
- Mat matriceFondamentale (vector<KeyPoint> ,vector<KeyPoint> ,vector<DMatch>);
+Mat matriceFondamentale (vector<KeyPoint> ,vector<KeyPoint> ,vector<DMatch>);
+
+Mat matriceEssentielle (Mat F, Mat K);
 

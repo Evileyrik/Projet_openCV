@@ -3,9 +3,12 @@
 #include <opencv2/features2d/features2d.hpp>
 #include <opencv2/video/video.hpp>
 #include <opencv2/opencv.hpp>
+#include "traitement.h"
 
 using namespace cv;
 using namespace std;
+
+
 
 
 Mat detectionFeature (Mat image){
@@ -90,9 +93,17 @@ Mat matriceFondamentale (vector<KeyPoint> pointcle1,vector<KeyPoint> pointcle2,v
         points2.push_back(pointcle2[bonMatches[i].trainIdx].pt);
     }
 
-    Mat matrice = findFundamentalMat(points1,points2,FM_RANSAC, 3, 0.99);
+    Mat matrice = findFundamentalMat(points1,points2,FM_RANSAC, 3, 0.99);//méthode de calcul utilisant RANSAC, avec une erreur tolérée de 3 avec une proba de 99%
     return matrice;
 }
 
 
 
+Mat matriceEssentielle (Mat F, Mat K){
+    Mat Kt;
+    transpose(K,Kt);
+    Mat E = Kt*F*K;
+    return E;
+
+
+}

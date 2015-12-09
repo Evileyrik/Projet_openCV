@@ -3,6 +3,7 @@
 #include <opencv2/features2d/features2d.hpp>
 #include <opencv2/video/video.hpp>
 #include <opencv2/opencv.hpp>
+#include <vector>
 #include "traitement.h"
 
 using namespace cv;
@@ -16,14 +17,14 @@ Mat detectionFeature (Mat image){
     int nbPoints = 1000;//détermine le nombre de points d'interets
 
     //detection des points cle
-    OrbFeatureDetector detecteur( nbPoints );
+    Ptr<FeatureDetector> detecteur = ORB::create();
     std::vector<KeyPoint> pointsCle;
-    detecteur.detect( image, pointsCle );
+    detecteur->detect( image, pointsCle );
 
     //Calcul les zones cle de description
-    OrbDescriptorExtractor extracteur;
+    Ptr<DescriptorExtractor> extracteur = ORB::create();
     Mat descripteur;
-    extracteur.compute(image,pointsCle,descripteur);
+    extracteur->compute(image,pointsCle,descripteur);
 
     return descripteur;
 
@@ -33,9 +34,9 @@ std::vector<KeyPoint> getPointCle (Mat image){
     int nbPoints = 1000;//détermine le nombre de points d'interets
 
     //detection des points cle
-    OrbFeatureDetector detecteur( nbPoints );
+    Ptr<FeatureDetector> detecteur = ORB::create();
     std::vector<KeyPoint> pointsCle;
-    detecteur.detect( image, pointsCle );
+    detecteur->detect( image, pointsCle );
 
     return pointsCle;
 
@@ -107,3 +108,17 @@ Mat matriceEssentielle (Mat F, Mat K){
 
 
 }
+Mat newPosition(Mat camPosition, Mat E, Mat W){
+    Mat R1,R2,T;
+
+    SVD svd(E);
+    R1=svd.u*W*svd.vt;
+    R2 = svd.u*W.t()*svd.vt;
+    T=svd.u.col(2);
+    camPosition=R1.inv()*T;
+
+
+    return camPosition;
+
+}
+

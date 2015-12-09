@@ -22,7 +22,7 @@ void souris(int event, int x, int y, int flags, void* param){
 }
 
 //boucle principale
-int hue() {
+int hueh() {
 
     // Touche clavier
     char key;

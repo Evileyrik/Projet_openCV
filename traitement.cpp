@@ -31,7 +31,7 @@ Mat detectionFeature (Mat image){
 }
 std::vector<KeyPoint> getPointCle (Mat image){
 
-    int nbPoints = 1000;//détermine le nombre de points d'interets
+    int nbPoints = 3000;//détermine le nombre de points d'interets
 
     //detection des points cle
     Ptr<FeatureDetector> detecteur = ORB::create();
@@ -94,7 +94,7 @@ Mat matriceFondamentale (vector<KeyPoint> pointcle1,vector<KeyPoint> pointcle2,v
         points2.push_back(pointcle2[bonMatches[i].trainIdx].pt);
     }
 
-    Mat matrice = findFundamentalMat(points1,points2,FM_RANSAC, 3, 0.99);//méthode de calcul utilisant RANSAC, avec une erreur tolérée de 3 avec une proba de 99%
+    Mat matrice = findFundamentalMat(points1,points2,FM_RANSAC, 4, 0.99);//méthode de calcul utilisant RANSAC, avec une erreur tolérée de 3 avec une proba de 99%
     return matrice;
 }
 
@@ -108,17 +108,57 @@ Mat matriceEssentielle (Mat F, Mat K){
 
 
 }
-Mat newPosition(Mat camPosition, Mat E, Mat W){
-    Mat R1,R2,T;
-
-    SVD svd(E);
-    R1=svd.u*W*svd.vt;
-    R2 = svd.u*W.t()*svd.vt;
-    T=svd.u.col(2);
-    camPosition=R1.inv()*T;
 
 
-    return camPosition;
+//calcule les matrice cam selon formules de H&Z
+void calculCamMat(Mat& P1,Mat& P2,Mat R,Mat T){
+
+    for (int i=0;i<3;i++)
+    {
+        for (int j=0;j<4;j++)
+        {
+            if (i==j)
+                P1.at<double>(i,j)=1;
+            else
+                P1.at<double>(i,j)=0;
+
+        }
+    }
+
+    for (int i=0;i<3;i++)
+    {
+        for (int j=0;j<4;j++)
+        {
+            if (j<3)
+                P2.at<double>(i,j)=R.at<double>(i,j);
+            else
+                P2.at<double>(i,j)=T.at<double>(i);
+
+        }
+    }
+
+
 
 }
 
+//on calcul un vecteur directeur à l'aide de la relation dans H&Z x=PX.
+Mat calculVecteur(Point point,Mat mat){
+
+    Mat matriceExtraite = Mat(3,3,CV_64F);
+    Mat solution;
+    //on extrait une matrice 3x3 de mat
+    for (int i=0;i<3;i++){
+        for (int j=0;j<3;j++){
+            matriceExtraite.at<double>(i,j)=mat.at<double>(i,j);
+        }
+    }
+
+    Mat b = Mat(3,1,CV_64F);
+    b.at<double>(0,0)= point.x-mat.at<double>(0,3);
+    b.at<double>(1,0)=point.y-mat.at<double>(1,3);
+    b.at<double>(2,0)=1-mat.at<double>(2,3);
+
+    solve(matriceExtraite,b,solution,DECOMP_SVD);
+
+    return solution;
+}

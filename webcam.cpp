@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include "opencv/highgui.h"
 #include "opencv/cv.h"
 
@@ -22,7 +22,7 @@ void souris(int event, int x, int y, int flags, void* param){
 }
 
 //boucle principale
-int hueh() {
+int hue() {
 
     // Touche clavier
     char key;
@@ -101,4 +101,4 @@ int hueh() {
     cam.release();//détruit le videocapture. Il faut absolumet quitter le programme avec q ou Q sinon en relançant le programme on va avoir un bug
     return 0;
 
-}
+}*/

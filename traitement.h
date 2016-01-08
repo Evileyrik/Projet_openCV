@@ -17,5 +17,9 @@ Mat matriceFondamentale (vector<KeyPoint> ,vector<KeyPoint> ,vector<DMatch>);
 
 Mat matriceEssentielle (Mat F, Mat K);
 
-Mat newPosition(Mat camPosition, Mat E, Mat W);
+void calculCamMat(Mat& P1,Mat& P2,Mat R,Mat T);
+
+Mat calculVecteur (Point, Mat);
+
+
 

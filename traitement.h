@@ -21,5 +21,8 @@ void calculCamMat(Mat& P1,Mat& P2,Mat R,Mat T);
 
 Mat calculVecteur (Point, Mat);
 
+Mat calculCentre (Mat);
 
+double distDroite (Mat ,Mat , Mat , Mat );
 
+Mat projection(Mat,Mat,Mat);

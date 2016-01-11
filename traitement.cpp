@@ -110,7 +110,7 @@ Mat matriceEssentielle (Mat F, Mat K){
 }
 
 
-//calcule les matrice cam selon formules de H&Z
+//on calcule les matrice cam selon formules de H&Z
 void calculCamMat(Mat& P1,Mat& P2,Mat R,Mat T){
 
     for (int i=0;i<3;i++)
@@ -141,7 +141,7 @@ void calculCamMat(Mat& P1,Mat& P2,Mat R,Mat T){
 
 }
 
-//on calcul un vecteur directeur à l'aide de la relation dans H&Z x=PX.
+//on calcule un vecteur directeur à l'aide de la relation dans H&Z x=PX que l'on peut mettre sous forme AX'=b ou A est 3x3 et X' = (X,Y,Z)
 Mat calculVecteur(Point point,Mat mat){
 
     Mat matriceExtraite = Mat(3,3,CV_64F);
@@ -162,3 +162,82 @@ Mat calculVecteur(Point point,Mat mat){
 
     return solution;
 }
+
+//on calcule le cntre de la caméra à l'aide de la relation de H&Z
+Mat calculCentre(Mat cameraMatrix){
+
+    Mat m=Mat(3,3,CV_64F);
+    Mat p=Mat(3,1,CV_64F);
+
+    //extraction de la matrice de rotation
+    for (int i=0;i<3;i++){
+        for (int j=0;j<3;j++){
+            m.at<double>(i,j)=cameraMatrix.at<double>(i,j);
+        }
+        p.at<double>(i,0)=cameraMatrix.at<double>(i,3);
+    }
+
+    Mat center = Mat(3,1,CV_64F);
+    center = -m.inv(DECOMP_SVD)*p;
+    return center;
+}
+
+
+//on calcule la distance entre deux droites.
+double distDroite (Mat center1,Mat center2, Mat vectDir1, Mat vectDir2){
+
+    Mat A = center1+vectDir1;
+    Mat B = center2+vectDir2;
+    Mat C = B-A;
+    Mat M =Mat(3,3,CV_64F);
+
+    for (int i=0;i<3;i++){
+        M.at<double>(i,0)=C.at<double>(i,0);
+        M.at<double>(i,1)=vectDir1.at<double>(i,0);
+        M.at<double>(i,2)=vectDir2.at<double>(i,0);
+    }
+
+    double norme =norm( vectDir1.cross(vectDir2));
+
+    if (norme ==0)//les droites sont parallelles
+        return norm(center2-center1);
+    else
+        return abs(determinant(M)/norme);
+
+}
+
+//on calcule la projection orthogonale d'un point sur une droite
+Mat projection(Mat point,Mat vectdir,Mat center){
+
+    Mat projete=Mat(3,1,CV_64F);
+    //Soit M le projeté de A sur la droite D. Soient B et C des points de D. On a alors : dot(AM,BC) = 0 et cross(BM,BC) =0
+    // on peut le ramener sous la forme matricielle classique Ax=b ou A est une matrice 3x3
+    Mat B=center+vectdir;
+    Mat C=center+0.5*vectdir;
+    double a = C.at<double>(0,0)-B.at<double>(0,0);
+    double b = C.at<double>(1,0)-B.at<double>(1,0);
+    double c = C.at<double>(2,0)-B.at<double>(2,0);
+
+    Mat A=Mat(3,3,CV_64F);
+    Mat D = Mat(3,1,CV_64F);
+
+    A.at<double>(0,0)=a;
+    A.at<double>(0,1)=b;
+    A.at<double>(0,2)=c;
+    A.at<double>(1,0)=b;
+    A.at<double>(1,1)=-a;
+    A.at<double>(1,2)=0;
+    A.at<double>(2,0)=-c;
+    A.at<double>(2,1)=0;
+    A.at<double>(2,2)=a;
+
+    D.at<double>(0,0)=a*point.at<double>(0,0)+b*point.at<double>(1,0)+c*point.at<double>(2,0);
+    D.at<double>(1,0)=b*B.at<double>(0,0)-a*B.at<double>(1,0);
+    D.at<double>(2,0)=a*B.at<double>(2,0)-c*B.at<double>(0,0);
+
+    solve(A,D,projete,DECOMP_SVD);
+
+    return projete;
+}
+
+

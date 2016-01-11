@@ -49,7 +49,7 @@ int main(){
     char key;
     int pause=0;
     // Capture vidéo
-    VideoCapture cam(0);
+    VideoCapture cam(-1);
     //test si la cam est ouverte
     if (!cam.isOpened())
         cout<<"Cam non ouverte !";
@@ -68,8 +68,12 @@ int main(){
     Mat P2=Mat(3,4,CV_64F);
     Mat vect1=Mat(4,1,CV_64F);
     Mat vect2=Mat(4,1,CV_64F);
+    Mat center1=Mat (3,1,CV_64F);
+    Mat center2=Mat(3,1,CV_64F);
     //coordonnée clicks
     Point pointImg1,pointImg2;
+    //distance entre les 2 droites
+    double distance=0;
 
 
     //bons matches
@@ -141,9 +145,6 @@ int main(){
             points2.push_back(pointcle2[bonMatches[i].trainIdx].pt);
         }
 
-        /*Mat H =findHomography(points1,points2,noArray(),CV_RANSAC,3);
-        cout<<H<<endl;*/
-
         //on calcule les matrices de rotations et translations
         recoverPose(E,points1,points2,R,T,focal,pp,noArray());
         //on calcule P et P' selon H&Z
@@ -151,7 +152,12 @@ int main(){
         //calcul des vecteurs directeurs
         vect1=calculVecteur(pointImg1,P1);
         vect2=calculVecteur(pointImg2,P2);
-
+        //calcul des centres de caméra
+        center1=calculCentre(P1);
+        center2=calculCentre(P2);
+        //calcul de distance
+        distance=distDroite(center1,center2,vect1,vect2);
+        cout<<distance<<endl;
 
 
     }

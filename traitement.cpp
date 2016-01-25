@@ -14,10 +14,10 @@ using namespace std;
 
 
 Mat detectionFeature (Mat image){
-
+    //Prend en entrée un image, et en retourne les points caractéristiques avec leur environnement.
     int nbPoints = 3000;//détermine le nombre de points d'interets
 
-    //detection des points cle
+    //detection des points cles
     Ptr<FeatureDetector> detecteur = ORB::create();
     std::vector<KeyPoint> pointsCle;
     detecteur->detect( image, pointsCle );
@@ -32,6 +32,7 @@ Mat detectionFeature (Mat image){
 }
 
 std::vector<KeyPoint> getPointCle (Mat image){
+    // Pareil que celle d'avant, mais ne retourne que les points clés, sans environnement
 
     int nbPoints = 3000;//détermine le nombre de points d'interets
 
@@ -45,6 +46,7 @@ std::vector<KeyPoint> getPointCle (Mat image){
 }
 
  std::vector< DMatch > matcher (Mat descripteur1,Mat descripteur2){
+    //renvoie les indices des "bons" points uniquement
 
     //on recupere les zones en communs
     FlannBasedMatcher matcher;
@@ -76,7 +78,7 @@ std::vector<KeyPoint> getPointCle (Mat image){
     std::vector<DMatch> bonMatches;
     for (int i=0;i<matches.size();i++)
     {
-        if (matches[i].distance<=2*dmin)
+        if (matches[i].distance<=2*dmin) //2*distance minimale est fixé arbitrairement
             bonMatches.push_back(matches[i]);
     }
 
@@ -85,7 +87,7 @@ std::vector<KeyPoint> getPointCle (Mat image){
 }
 
 Mat getHomography(Mat image1,Mat image2){
-
+    // Forme la matrice d'homographie et la retourne
 
    //bons matches
     std::vector<DMatch> bonMatches;
@@ -105,9 +107,9 @@ Mat getHomography(Mat image1,Mat image2){
     for(int i = 0; i<bonMatches.size(); i++ )
     {
         // image de gauche
-        points1.push_back(pointcle1[bonMatches[i].queryIdx].pt);
+        points1.push_back(pointcle1[bonMatches[i].queryIdx].pt); //image1
         // image de droite
-        points2.push_back(pointcle2[bonMatches[i].trainIdx].pt);
+        points2.push_back(pointcle2[bonMatches[i].trainIdx].pt); //Image2
     }
 
     Mat H = findHomography(points1,points2,CV_RANSAC,1,noArray(),4000,0.995);
@@ -117,6 +119,7 @@ Mat getHomography(Mat image1,Mat image2){
 
 
 void traitement(Point2f* point,Mat* image1,Mat* image2){
+    //Affiche le point tracké
 
     float diff=80;//déplacement maximum toléré
     Point2f point2 = Point2f (point->x,point->y);

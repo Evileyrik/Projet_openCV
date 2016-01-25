@@ -5,7 +5,6 @@
 #include <opencv2/opencv.hpp>
 #include <math.h>
 #include <vector>
-#include "classe.h"
 #include "traitement.h"
 
 using namespace std;
@@ -36,8 +35,7 @@ void souris1(int event, int x, int y, int flags, void* param){
 
 int main(){
 
-
-
+    //Initialisation
     char key;
     //variable servant pour la pause
     int pause=0;
@@ -46,7 +44,7 @@ int main(){
     //test si la cam est ouverte
     if (!cam.isOpened())
         cout<<"Cam non ouverte !";
-    //creation de la fenetre
+    //creation des fenetres
     namedWindow("image1");
     namedWindow("image2");
     // Image
@@ -65,10 +63,11 @@ int main(){
     Mat* H=new Mat;
 
     //a améliorer!!!
-    while(key != 'q' && key != 'Q') {
+    //boucle d'execution du programme
+    while(key != 'q' && key != 'Q') { //La boucle s'execute tans qu'on appuie pas sur p ou q
 
         if (key=='p') {
-            pause=(pause+1);
+            pause=(pause+1); // le bouton p permet de faire pause sur l'image pour sélectionner un point
         }
         if (pause==0)
         {
@@ -80,7 +79,7 @@ int main(){
             imshow("image1",*image1);
         }
 
-        if(click==1){
+        if(click==1){ //Selection de l'image
             imshow("image1",*image1);
             click=0;
         }

@@ -19,6 +19,6 @@ std::vector<KeyPoint> getPointCle (Mat );
 
 Mat getHomography(Mat, Mat);
 
-void traitement(Point2f* point,Mat* image1,Mat* image2);
+void traitement(Point2f* point,Mat* image1,Mat* image2,string annotation);
 
 #endif // TRAITEMENT_H

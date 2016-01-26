@@ -81,7 +81,7 @@ std::vector<KeyPoint> getPointCle (Mat image){
         if (matches[i].distance<=2*dmin) //2*distance minimale est fixé arbitrairement
             bonMatches.push_back(matches[i]);
     }
-
+    cout<<"nombre : "<<bonMatches.size()<<endl;
     return bonMatches;
 
 }
@@ -118,9 +118,9 @@ Mat getHomography(Mat image1,Mat image2){
 
 
 
-void traitement(Point2f* point,Mat* image1,Mat* image2){
+void traitement(Point2f* point,Mat* image1,Mat* image2,string annotation){
     //Affiche le point tracké
-
+    Point centreTxt;
     float diff=80;//déplacement maximum toléré
     Point2f point2 = Point2f (point->x,point->y);
     std::vector<Point2f> vecteur1;
@@ -131,14 +131,21 @@ void traitement(Point2f* point,Mat* image1,Mat* image2){
     vecteur1.clear();
     vecteur1.push_back(point2);
     vecteur2.clear();
-
     if ((H.rows!=0)&&(H.cols!=0)){
 
-        perspectiveTransform(vecteur1,vecteur2,H);
 
-       // if ((abs(point2.x-vecteur2[0].x)<=diff)&&(abs(point2.y-vecteur2[0].y)<=diff)){
-            point=new Point2f;
-            *point=vecteur2[0];
+        perspectiveTransform(vecteur1,vecteur2,H);
+        //if ((abs(point2.x-vecteur2[0].x)<=diff)&&(abs(point2.y-vecteur2[0].y)<=diff)){
+            point=new Point2f(vecteur2[0].x,vecteur2[0].y);
+            if ((point->x<620)&&(point->y<400)){
+                centreTxt.x=point->x+10;
+                centreTxt.y=point->y+10;
+            }
+            else{
+                centreTxt.x=point->x-10;
+                centreTxt.y=point->y-10;
+            }
+            putText(*image2,annotation,centreTxt,FONT_HERSHEY_COMPLEX,0.8,CV_RGB(255,0,0),3,LINE_8,false);
        // }
 
     }

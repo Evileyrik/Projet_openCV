@@ -16,6 +16,7 @@ using namespace cv;
 //variables pour le callback
 Point2f* point = new Point2f(0,0);
 int click=0;
+string annotation;
 
 
 //callback gerant la souris
@@ -24,7 +25,19 @@ void souris1(int event, int x, int y, int flags, void* param){
     if (event==CV_EVENT_LBUTTONDOWN){
         Mat &img = *((Mat*)(param));
         point = new Point2f (x,y);
+        Point centreTxt;
+        cout<<"Annotation : "<<endl;
+        cin>>annotation;
         circle(img,*point,5,CV_RGB(0,0,255),5,8,0);
+        if ((point->x<620)&&(point->y<400)){
+            centreTxt.x=point->x+10;
+            centreTxt.y=point->y+10;
+        }
+        else{
+            centreTxt.x=point->x-10;
+            centreTxt.y=point->y-10;
+        }
+        putText(img,annotation,centreTxt,FONT_HERSHEY_COMPLEX,0.8,CV_RGB(255,0,0),3,LINE_8,false);
         click=1;
 
     }
@@ -50,8 +63,6 @@ int main(){
     // Image
     Mat* image1=new Mat;
     Mat* image2=new Mat;
-
-
     //callback
     setMouseCallback("image1", souris1, image1);
    //bons matches
@@ -64,7 +75,7 @@ int main(){
 
     //a améliorer!!!
     //boucle d'execution du programme
-    while(key != 'q' && key != 'Q') { //La boucle s'execute tans qu'on appuie pas sur p ou q
+    while(key != 'q' && key != 'Q') { //La boucle s'execute tans qu'on n'appuie pas sur q
 
         if (key=='p') {
             pause=(pause+1); // le bouton p permet de faire pause sur l'image pour sélectionner un point
@@ -89,11 +100,13 @@ int main(){
 
     }
 
+    //boucle principale de traitement
     key=cvWaitKey(5);
     while(key!='q'){
         image2=new Mat;
         cam.read(*image2);
-        traitement(point,image1,image2);
+        cout<<"test"<<point->x<<endl;
+        traitement(point,image1,image2,annotation);
         key=cvWaitKey(40);
     }
 

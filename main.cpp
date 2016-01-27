@@ -70,10 +70,9 @@ int main(){
     std::vector<KeyPoint> pointcle2,pointcle1;
     //descriptor
     Mat descripteur1,descripteur2;
-    //Matrice Homography
-    Mat* H=new Mat;
 
-    //a améliorer!!!
+
+
     //boucle d'execution du programme
     while(key != 'q' && key != 'Q') { //La boucle s'execute tans qu'on n'appuie pas sur q
 

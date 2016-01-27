@@ -111,7 +111,7 @@ Mat getHomography(Mat image1,Mat image2){
         points2.push_back(pointcle2[bonMatches[i].trainIdx].pt); //Image2
     }
 
-    Mat H = findHomography(points1,points2,CV_RANSAC,1,noArray(),4000,0.995);
+    Mat H = findHomography(points1,points2,CV_RANSAC,1,noArray(),2000,0.995);
     return H;
 }
 

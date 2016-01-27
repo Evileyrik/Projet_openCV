@@ -120,7 +120,6 @@ Mat getHomography(Mat image1,Mat image2){
 void traitement(Point2f* point,Mat* image1,Mat* image2,string annotation){
     //Affiche le point tracké
     Point centreTxt;
-    float diff=80;//déplacement maximum toléré
     Point2f point2 = Point2f (point->x,point->y);
     std::vector<Point2f> vecteur1;
     std::vector<Point2f> vecteur2;

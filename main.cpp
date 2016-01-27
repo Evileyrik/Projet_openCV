@@ -105,7 +105,6 @@ int main(){
     while(key!='q'){
         image2=new Mat;
         cam.read(*image2);
-        cout<<"test"<<point->x<<endl;
         traitement(point,image1,image2,annotation);
         key=cvWaitKey(40);
     }

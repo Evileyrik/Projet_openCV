@@ -81,8 +81,7 @@ std::vector<KeyPoint> getPointCle (Mat image){
         if (matches[i].distance<=2*dmin) //2*distance minimale est fixé arbitrairement
             bonMatches.push_back(matches[i]);
     }
-    cout<<"nombre : "<<bonMatches.size()<<endl;
-    return bonMatches;
+     return bonMatches;
 
 }
 
@@ -132,24 +131,20 @@ void traitement(Point2f* point,Mat* image1,Mat* image2,string annotation){
     vecteur1.push_back(point2);
     vecteur2.clear();
     if ((H.rows!=0)&&(H.cols!=0)){
-
-
         perspectiveTransform(vecteur1,vecteur2,H);
-        //if ((abs(point2.x-vecteur2[0].x)<=diff)&&(abs(point2.y-vecteur2[0].y)<=diff)){
-            point=new Point2f(vecteur2[0].x,vecteur2[0].y);
-            if ((point->x<620)&&(point->y<400)){
-                centreTxt.x=point->x+10;
-                centreTxt.y=point->y+10;
-            }
-            else{
-                centreTxt.x=point->x-10;
-                centreTxt.y=point->y-10;
-            }
-            putText(*image2,annotation,centreTxt,FONT_HERSHEY_COMPLEX,0.8,CV_RGB(255,0,0),3,LINE_8,false);
-       // }
-
+        point=new Point2f(vecteur2[0].x,vecteur2[0].y);
     }
-
+    //texte
+    if ((point->x<620)&&(point->y<400)){
+        centreTxt.x=point->x+10;
+        centreTxt.y=point->y+10;
+    }
+    else{
+        centreTxt.x=point->x-10;
+        centreTxt.y=point->y-10;
+    }
+    putText(*image2,annotation,centreTxt,FONT_HERSHEY_COMPLEX,0.8,CV_RGB(255,0,0),3,LINE_8,false);
+    //point
     circle(*image2,*point,5,CV_RGB(0,0,255),5,LINE_8,0);
     imshow("image2",*image2);
     image1=new Mat;

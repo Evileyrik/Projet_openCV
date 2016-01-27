@@ -8,7 +8,7 @@ On veut que ces annotations suivent les points auquels elles sont attachées lors
 
 ##Fonctionnement : 
 Appuyer sur p pour capturer une image.
-Cliquer sur le point que l'on veut annoter sur les deux images
-Appuyer sur q pour passer au flux de vidéo avec le point que l'on veut annoter (à faire)
+Cliquer sur le point que l'on veut annoter.
+Appuyer sur q pour passer au flux de vidéo avec le point que l'on veut annoter 
 
 
